@@ -17,8 +17,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     openmpi-bin \
     openmpi-doc \
     protobuf-compiler \
-    python-dev \
-    python-pip \
+#     python-dev \
+#     python-pip \
     python3-dev \
     python3-pip \
     libgflags-dev \
@@ -26,10 +26,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get autoremove \
     && rm -rf /var/lib/apt/lists/*
 
+# RUN pip install --upgrade pip
+# RUN pip install setuptools
+# RUN pip install \
+#     future \
+#     numpy \
+#     protobuf \
+#     jupyter
+
 RUN pip3 install --upgrade pip
-
 RUN pip3 install setuptools
-
 RUN pip3 install \
     future \
     numpy \
