@@ -44,7 +44,7 @@ RUN pip3 install \
 
 RUN git clone --recursive https://github.com/caffe2/caffe2.git && cd caffe2 \
     && mkdir build && cd build \
-    && cmake -DUSE_CUDA=OFF -DUSE_MPI=OFF .. \
+    && cmake -DUSE_CUDA=OFF -DUSE_MPI=OFF -DPYTHON_INCLUDE_DIR=$(python3 -c 'from distutils import sysconfig; print(sysconfig.get_python_inc())') -DPYTHON_EXECUTABLE=$(which python3) .. \
     && make install
 
 EXPOSE 8888
