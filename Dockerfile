@@ -1,51 +1,32 @@
 FROM ubuntu:16.04
 MAINTAINER Thomas Sablik
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    cmake \
+RUN apt-get update --fix-missing && apt-get install -y --no-install-recommends \
+    wget \
+    bzip2 \
+    libglib2.0-0 \
+    libxext6 \
+    libsm6 \
+    libxrender1 \
     git \
-    libgoogle-glog-dev \
-    libgtest-dev \
-    libiomp-dev \
-    libleveldb-dev \
-    liblmdb-dev \
-    libopencv-dev \
-    libopenmpi-dev \
-    libsnappy-dev \
-    libprotobuf-dev \
-    openmpi-bin \
-    openmpi-doc \
-    protobuf-compiler \
-#     python-dev \
-#     python-pip \
-    python3-dev \
-    python3-pip \
-    libgflags-dev \
+    mercurial \
+    subversion \
+    ca-certificates \
+#    curl \
     && apt-get clean \
     && apt-get autoremove \
     && rm -rf /var/lib/apt/lists/*
 
-# RUN pip install --upgrade pip
-# RUN pip install setuptools
-# RUN pip install \
-#     future \
-#     numpy \
-#     protobuf \
-#     jupyter
+#RUN curl -L https://repo.continuum.io/archive/Anaconda3-5.1.0-Linux-x86_64.sh | /bin/bash
 
-RUN pip3 install --upgrade pip
-RUN pip3 install setuptools
-RUN pip3 install \
-    future \
-    numpy \
-    protobuf \
-    jupyter
+RUN echo 'export PATH=/opt/conda/bin:$PATH' > /etc/profile.d/conda.sh \
+    && wget --quiet https://repo.continuum.io/archive/Anaconda3-5.1.0-Linux-x86_64.sh -O ~/anaconda.sh \
+    && /bin/bash ~/anaconda.sh -b -p /opt/conda \
+    && rm ~/anaconda.sh
 
-RUN git clone --recursive https://github.com/caffe2/caffe2.git && cd caffe2 \
-    && mkdir build && cd build \
-    && cmake -DUSE_CUDA=OFF -DUSE_MPI=OFF -DPYTHON_INCLUDE_DIR=$(python3 -c 'from distutils import sysconfig; print(sysconfig.get_python_inc())') -DPYTHON_EXECUTABLE=$(which python3) .. \
-    && make install
+ENV PATH /opt/conda/bin:$PATH
+
+RUN conda install -c caffe2 caffe2
 
 EXPOSE 8888
 RUN useradd -ms /bin/bash deeplearning
