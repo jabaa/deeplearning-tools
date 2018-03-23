@@ -12,6 +12,7 @@ RUN apt-get update --fix-missing && apt-get install -y --no-install-recommends \
     mercurial \
     subversion \
     ca-certificates \
+    graphviz \
 #    curl \
     && apt-get clean \
     && apt-get autoremove \
@@ -26,7 +27,9 @@ RUN echo 'export PATH=/opt/conda/bin:$PATH' > /etc/profile.d/conda.sh \
 
 ENV PATH /opt/conda/bin:$PATH
 
+RUN conda update -n base conda
 RUN conda install -c caffe2 caffe2
+RUN conda install pydot
 
 EXPOSE 8888
 RUN useradd -ms /bin/bash deeplearning
